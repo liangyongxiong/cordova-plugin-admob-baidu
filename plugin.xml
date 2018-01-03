@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android"
+    id="cordova-plugin-admob-baidu" version="1.0.0">
+
+    <name>Baidu MSSP</name>
+    <author>Michael LYX</author>
+    <description>Cordova Baidu MSSP Ads Plugin</description>
+    <keywords>cordova,baidu,mssp,ads</keywords>
+    <license>Apache 2.0</license>
+    <repo>https://github.com/liangyongxiong/cordova-plugin-admob-baidu.git</repo>
+    <issue>https://github.com/liangyongxiong/cordova-plugin-admob-baidu/issues</issue>
+
+    <js-module name="baiduadmob" src="www/baiduadmob.js">
+         <clobbers target="cordova.BaiduAdMob" />
+    </js-module>
+
+    <!-- android -->
+    <platform name="android">
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="BaiduAdMob">
+                <param name="android-package" value="cn.liangyongxiong.cordova.plugin.admob.baidu.BaiduAdMob" />
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <activity android:name="com.baidu.mobads.AppActivity"
+                android:configChanges="keyboard|keyboardHidden|orientation"
+                android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+            <!-- 如果targetSdkVersion设置值>=24，则强烈建议添加provider，否则会影响app变现效率 -->
+            <provider android:name="com.baidu.mobads.openad.FileProvider" android:authorities="${packageName}.bd.provider"
+                android:exported="false" android:grantUriPermissions="true">
+                <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/bd_file_paths" />
+            </provider>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+            <!-- 以下为可选权限 -->
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+        </config-file>
+
+        <framework src="com.android.support:support-v4:26.0.0-alpha1" />
+        <resource-file src="src/android/xml/bd_file_paths.xml" target="res/xml/bd_file_paths.xml" />
+
+        <source-file src="src/android/libs/Baidu_MobAds_SDK.jar" target-dir="libs" />
+
+        <source-file src="src/android/BaiduAdMob.java" target-dir="src/cn/liangyongxiong/cordova/plugin/admob/baidu" />
+    </platform>
+
+    <!-- ios -->
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="BaiduAdMob">
+                <param name="ios-package" value="BaiduAdMob"/>
+            </feature>
+        </config-file>
+
+        <header-file src="src/ios/BaiduAdMob.h" />
+        <source-file src="src/ios/BaiduAdMob.m" />
+
+        <framework src="src/ios/BaiduMobAdSDK.framework" custom="true" framework="true" />
+
+        <framework src="CoreMotion.framework" />
+        <framework src="SystemConfiguration.framework" />
+        <framework src="CoreLocation.framework" />
+        <framework src="CoreTelephony.framework" />
+        <framework src="CoreMedia.framework" />
+        <framework src="MessageUI.framework" />
+        <framework src="SafariServices.framework" />
+        <framework src="AdSupport.framework" />
+        <framework src="QuartzCore.framework" />
+        <framework src="StoreKit.framework" />
+        <framework src="libc++.tbd" />
+    </platform>
+
+</plugin>
