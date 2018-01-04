@@ -52,6 +52,9 @@
         <source-file src="src/android/libs/Baidu_MobAds_SDK.jar" target-dir="libs" />
 
         <source-file src="src/android/BaiduAdMob.java" target-dir="src/cn/liangyongxiong/cordova/plugin/admob/baidu" />
+        <source-file src="src/android/BaiduAdMobBannerFragment.java" target-dir="src/cn/liangyongxiong/cordova/plugin/admob/baidu" />
+        <source-file src="src/android/BaiduAdMobInterstitialAdFragment.java" target-dir="src/cn/liangyongxiong/cordova/plugin/admob/baidu" />
+        <source-file src="src/android/BaiduAdMobSplashAdFragment.java" target-dir="src/cn/liangyongxiong/cordova/plugin/admob/baidu" />
     </platform>
 
     <!-- ios -->
