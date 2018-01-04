@@ -10,6 +10,16 @@ https://www.npmjs.com/package/cordova-plugin-admob-baidu
 
 ## Usage
 
+#### 官方SDK
+
++ Android 通用版
+
+https://baidu-ssp.gz.bcebos.com/mssp/sdk/BaiduMobAds_MSSP_bd_SDK_android_v5.6.zip
+
++ iOS 通用版
+
+https://baidu-ssp.gz.bcebos.com/mssp/sdk/BaiduMobAds_MSSP_bd_SDK_iOS_v4.5.zip
+
 #### 横幅广告（Banner）
 
 `align` : 显示位置（top-顶部，bottom-底部）
@@ -54,7 +64,7 @@ https://www.npmjs.com/package/cordova-plugin-admob-baidu
 
 #### 开屏广告（Splash）
 
-`bottom` : 底部填充图片，包括图片路径和填充区域高度（单位：dp）
+`bottom` : 底部填充区域，包括图片路径和填充区域高度（单位：dp）
 
     var splash = cordova.BaiduAdMob.SplashAd.show({
         app: YOUR_APP_ID,
