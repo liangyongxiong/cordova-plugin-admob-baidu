@@ -7,10 +7,9 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.baidu.mobads.AdSettings;
-import com.baidu.mobads.AdView;
 import com.baidu.mobads.InterstitialAd;
-import com.baidu.mobads.InterstitialAdListener;
+import com.baidu.mobads.BaiduManager;
+import com.baidu.mobads.production.BaiduXAdSDKContext;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -26,6 +25,20 @@ public class BaiduAdMob extends CordovaPlugin {
     private BaiduAdMobInterstitialAdFragment gdtInterstitialAdFragment;
     private InterstitialAd interAd;
 
+    @Override
+    protected void pluginInitialize() {
+        Activity activity = this.cordova.getActivity();
+        Log.i("","pluginInitialize");
+        // 百度广告展现前先调用sdk初始化方法，可以有效缩短广告第一次展现所需时间
+        BaiduManager.init(activity);
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.i("","onDestroy");
+        // 通过BaiduXAdSDKContext.exit()来告知AdSDK，以便AdSDK能够释放资源.
+        BaiduXAdSDKContext.exit();
+    }
 
     @Override
     public boolean execute(final String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {

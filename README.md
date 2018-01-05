@@ -1,6 +1,16 @@
 ## Purpose
 通过 Javascript 调用百度广告联盟（MSSP）SDK 接口，渲染广告内容
 
+## SDK
+
+#### Android 通用版
+
+https://baidu-ssp.gz.bcebos.com/mssp/sdk/BaiduMobAds_MSSP_bd_SDK_android_v5.6.zip
+
+#### iOS 通用版
+
+https://baidu-ssp.gz.bcebos.com/mssp/sdk/BaiduMobAds_MSSP_bd_SDK_iOS_v4.5.zip
+
 ## NPM
 https://www.npmjs.com/package/cordova-plugin-admob-baidu
 
@@ -8,17 +18,15 @@ https://www.npmjs.com/package/cordova-plugin-admob-baidu
 
     cordova plugin add cordova-plugin-admob-baidu
 
+或
+
+    cordova plugin add https://github.com/liangyongxiong/cordova-plugin-admob-baidu.git
+
 ## Usage
 
-#### 官方SDK
+`YOUR_APP_ID` : 应用媒体ID
 
-+ Android 通用版
-
-https://baidu-ssp.gz.bcebos.com/mssp/sdk/BaiduMobAds_MSSP_bd_SDK_android_v5.6.zip
-
-+ iOS 通用版
-
-https://baidu-ssp.gz.bcebos.com/mssp/sdk/BaiduMobAds_MSSP_bd_SDK_iOS_v4.5.zip
+`YOUR_POSITION_ID` : 广告位ID
 
 #### 横幅广告（Banner）
 

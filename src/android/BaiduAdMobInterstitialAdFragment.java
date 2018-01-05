@@ -24,7 +24,6 @@ import com.baidu.mobads.AdSize;
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.InterstitialAd;
 import com.baidu.mobads.InterstitialAdListener;
-import com.baidu.mobads.demo.main.R;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
