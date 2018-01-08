@@ -24,7 +24,6 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONObject;
 
 
-
 /**
  * Created by shion on 2017/12/15.
  */
@@ -32,15 +31,11 @@ import org.json.JSONObject;
 public class BaiduAdMobBannerFragment extends DialogFragment {
     public static final String APPID = "APPID";//应用id
     public static final String BannerPosID = "BannerPosID";
-    public static final String CLOSE = "CLOSE";
-    public static final String INTERVAL = "interval";
-    public static final String REFRESH = "refresh";
     private String appId = "";//应用id
     private String bannerPosId = "";
 
     private Context mContext;
-
-    AdView adView;
+    private AdView adView;
 
     public static BaiduAdMobBannerFragment newInstance(String appid, String bannerPosID) {
         BaiduAdMobBannerFragment fragment = new BaiduAdMobBannerFragment();
@@ -79,11 +74,17 @@ public class BaiduAdMobBannerFragment extends DialogFragment {
                 return false;
             }
         });
-
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(false);
         return dialog;
+    }
+
+    @Override
+    public void onDestroyView() {
+        sendUpdate("onClose", false);
+        doCloseBanner();
+        super.onDestroyView();
     }
 
     @Override
@@ -127,7 +128,6 @@ public class BaiduAdMobBannerFragment extends DialogFragment {
             }
         });
 
-
         DisplayMetrics dm = new DisplayMetrics();
         ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(dm);
         int winW = dm.widthPixels;
@@ -146,13 +146,12 @@ public class BaiduAdMobBannerFragment extends DialogFragment {
         if (adView != null) {
             adView.destroy();
         }
-        dismissAllowingStateLoss();
     }
 
-    public CallbackContext scallbackContext;
+    public CallbackContext callbackContext;
 
     public void setCallbackContext(CallbackContext callbackContext) {
-        this.scallbackContext = callbackContext;
+        this.callbackContext = callbackContext;
     }
 
     public void sendUpdate(String content, boolean keepCallback) {
@@ -171,7 +170,7 @@ public class BaiduAdMobBannerFragment extends DialogFragment {
     private void sendUpdate(JSONObject obj, boolean keepCallback, PluginResult.Status status) {
         PluginResult result = new PluginResult(status, obj);
         result.setKeepCallback(keepCallback);
-        scallbackContext.sendPluginResult(result);
+        callbackContext.sendPluginResult(result);
     }
 }
 

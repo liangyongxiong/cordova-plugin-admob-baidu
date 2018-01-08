@@ -9,9 +9,11 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,19 +44,17 @@ import java.io.InputStream;
 public class BaiduAdMobSplashAdFragment extends DialogFragment {
     public static final String APPID = "APPID";//应用id
     public static final String SplashPosID = "SplashPosID";
-    public static final String DELAY = "delay";
-    public static final String BOTTOM = "bottom";
+    public static final String IMAGE = "image";
     public static final String HEIGHT = "height";
     private String appId = "";//应用id
     private String splashPosID = "";
-    private int delay;
-    private String bottom;
+    private String image;
     private int height;
 
     private ViewGroup container;
     private TextView skipView;
     private ImageView bgImageView;
-    private static final String SKIP_TEXT = " 跳过 %d 秒";
+    private SplashAd splashAd;
     private Context mContext;
 
     private SplashAdListener listener = new SplashAdListener() {
@@ -85,16 +85,12 @@ public class BaiduAdMobSplashAdFragment extends DialogFragment {
         }
     };
 
-
-    public static BaiduAdMobSplashAdFragment newInstance(String appid, String bannerPosID, int delay,
-                                                         String bottom, int height
-    ) {
+    public static BaiduAdMobSplashAdFragment newInstance(String appid, String bannerPosID, String image, int height) {
         BaiduAdMobSplashAdFragment fragment = new BaiduAdMobSplashAdFragment();
         Bundle bundle = new Bundle();
         bundle.putString(APPID, appid);
         bundle.putString(SplashPosID, bannerPosID);
-        bundle.putInt(DELAY, delay);
-        bundle.putString(BOTTOM, bottom);
+        bundle.putString(IMAGE, image);
         bundle.putInt(HEIGHT, height);
         fragment.setArguments(bundle);
         return fragment;
@@ -106,8 +102,7 @@ public class BaiduAdMobSplashAdFragment extends DialogFragment {
         mContext = getActivity();
         appId = getArguments().getString(APPID);
         splashPosID = getArguments().getString(SplashPosID);
-        delay = getArguments().getInt(DELAY);
-        bottom = getArguments().getString(BOTTOM);
+        image = getArguments().getString(IMAGE);
         height = getArguments().getInt(HEIGHT);
         AdView.setAppSid(mContext, appId);
     }
@@ -142,6 +137,7 @@ public class BaiduAdMobSplashAdFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup c, Bundle savedInstanceState) {
         RelativeLayout relativeLayout = new RelativeLayout(mContext);
         relativeLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
         //1.背景图片
         bgImageView = new ImageView(mContext);
         bgImageView.setAdjustViewBounds(true);
@@ -149,6 +145,7 @@ public class BaiduAdMobSplashAdFragment extends DialogFragment {
         bgImageView.setBackgroundColor(Color.WHITE);
         bgImageView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         relativeLayout.addView(bgImageView);
+
         //2.广告容器+底部的Logo
         LinearLayout linearLayout = new LinearLayout(mContext);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
@@ -159,38 +156,44 @@ public class BaiduAdMobSplashAdFragment extends DialogFragment {
         this.container.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
         linearLayout.addView(this.container);
 
-        ImageView logoImageView = new ImageView(mContext);
-        logoImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        logoImageView.setAdjustViewBounds(true);
-        logoImageView.setImageBitmap(getImageFromAssets(bottom));
-        logoImageView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(mContext, height)));
-        linearLayout.addView(logoImageView);
-
-        String adPlaceId = splashPosID; // 重要：请填上您的广告位ID，代码位错误会导致无法请求到广告
-        // 如果开屏需要支持vr,needRequestVRAd(true)
-//        SplashAd.needRequestVRAd(true);
-        new SplashAd(mContext, container, listener, adPlaceId, true);
-
+        ImageView bottomImageView = new ImageView(mContext);
+        bottomImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        bottomImageView.setAdjustViewBounds(true);
+        bottomImageView.setImageBitmap(getImageFromAssets(image));
+        bottomImageView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(mContext, height)));
+        linearLayout.addView(bottomImageView);
 
         //第三部分 计时器
-//        skipView = new TextView(mContext);
-//        RelativeLayout.LayoutParams skipLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        skipLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-//        skipLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-//        skipLayoutParams.topMargin = dp2px(mContext, 16);
-//        skipLayoutParams.rightMargin = dp2px(mContext, 16);
-//        skipView.setLayoutParams(skipLayoutParams);
-//        skipView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-//        skipView.setTextColor(Color.WHITE);
-//        skipView.setGravity(Gravity.CENTER);
-//        GradientDrawable drawable = new GradientDrawable();
-//        drawable.setColor(Color.parseColor("#80000000"));
-//        drawable.setCornerRadius(dp2px(mContext, 45));
-//        drawable.setStroke(dp2px(mContext, 1), Color.WHITE);
-//        skipView.setBackground(drawable);
-//        skipView.setPadding(dp2px(mContext, 9), dp2px(mContext, 5), dp2px(mContext, 9), dp2px(mContext, 5));
-//        skipView.setVisibility(View.INVISIBLE);
-//        relativeLayout.addView(skipView);
+        skipView = new TextView(mContext);
+        RelativeLayout.LayoutParams skipLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        skipLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        skipLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        skipLayoutParams.topMargin = dp2px(mContext, 16);
+        skipLayoutParams.rightMargin = dp2px(mContext, 16);
+        skipView.setLayoutParams(skipLayoutParams);
+        skipView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+        skipView.setTextColor(Color.WHITE);
+        skipView.setGravity(Gravity.CENTER);
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(Color.parseColor("#80000000"));
+        drawable.setCornerRadius(dp2px(mContext, 45));
+        drawable.setStroke(dp2px(mContext, 1), Color.WHITE);
+        skipView.setBackground(drawable);
+        skipView.setPadding(dp2px(mContext, 9), dp2px(mContext, 5), dp2px(mContext, 9), dp2px(mContext, 5));
+        skipView.setVisibility(View.VISIBLE);
+        relativeLayout.addView(skipView);
+        skipView.setText("跳过");
+        skipView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                splashAd.destroy();
+                sendUpdate("onClose", false);
+                dismissAllowingStateLoss();
+            }
+        });
+        String adPlaceId = splashPosID; // 重要：请填上您的广告位ID，代码位错误会导致无法请求到广告
+        // 如果开屏需要支持vr,needRequestVRAd(true)
+        splashAd = new SplashAd(mContext, container, listener, adPlaceId, true);
         return relativeLayout;
     }
 
@@ -231,8 +234,7 @@ public class BaiduAdMobSplashAdFragment extends DialogFragment {
         canJumpImmediately = true;
     }
 
-
-    public Bitmap getImageFromAssets(String imageName) {
+    private Bitmap getImageFromAssets(String imageName) {
         AssetManager am = mContext.getAssets();
         InputStream is = null;
         try {
@@ -244,7 +246,7 @@ public class BaiduAdMobSplashAdFragment extends DialogFragment {
         return BitmapFactory.decodeStream(is);
     }
 
-    public int dp2px(Context context, float dpValue) {
+    private int dp2px(Context context, float dpValue) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, getResources().getDisplayMetrics());
     }
 
@@ -255,10 +257,10 @@ public class BaiduAdMobSplashAdFragment extends DialogFragment {
         super.onDestroy();
     }
 
-    public CallbackContext scallbackContext;
+    public CallbackContext callbackContext;
 
     public void setCallbackContext(CallbackContext callbackContext) {
-        this.scallbackContext = callbackContext;
+        this.callbackContext = callbackContext;
     }
 
     public void sendUpdate(String content, boolean keepCallback) {
@@ -277,7 +279,7 @@ public class BaiduAdMobSplashAdFragment extends DialogFragment {
     private void sendUpdate(JSONObject obj, boolean keepCallback, PluginResult.Status status) {
         PluginResult result = new PluginResult(status, obj);
         result.setKeepCallback(keepCallback);
-        scallbackContext.sendPluginResult(result);
+        callbackContext.sendPluginResult(result);
     }
 
 }

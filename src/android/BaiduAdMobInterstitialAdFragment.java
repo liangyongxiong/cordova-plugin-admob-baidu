@@ -69,8 +69,8 @@ public class BaiduAdMobInterstitialAdFragment extends DialogFragment {
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics outMetrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(outMetrics);
-        adHeight = outMetrics.widthPixels;
-        adWidth = (int) (adHeight * 3.0f / 4);
+        adWidth = (int) (outMetrics.widthPixels * 3.0f / 4);
+        adHeight = (int) (outMetrics.heightPixels * 3.0f / 4);
     }
 
     @Override
@@ -80,19 +80,22 @@ public class BaiduAdMobInterstitialAdFragment extends DialogFragment {
         if (window != null) {
             WindowManager.LayoutParams lp = window.getAttributes();
             lp.windowAnimations = android.R.style.Animation_Dialog;
-            lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
-            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.MATCH_PARENT;
             lp.gravity = Gravity.CENTER;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             }
+            window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            window.setDimAmount(0.7f);
         }
 
         dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
-                    return true;
+                    finish();
+                    return false;
                 }
                 return false;
             }
@@ -106,18 +109,23 @@ public class BaiduAdMobInterstitialAdFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        FrameLayout frameLayout = new FrameLayout(mContext);
-        frameLayout.setBackgroundResource(android.R.color.holo_blue_bright);
+        RelativeLayout relativeContainer = new RelativeLayout(mContext);
+        relativeContainer.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        relativeContainer.setBackgroundResource(android.R.color.transparent);
+
         relativeLayout = new RelativeLayout(mContext);
+        relativeLayout.setBackgroundResource(android.R.color.transparent);
         reLayoutParams = new RelativeLayout.LayoutParams(adWidth, adHeight);
+        reLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         relativeLayout.setLayoutParams(reLayoutParams);
-        frameLayout.addView(relativeLayout);
+        relativeContainer.addView(relativeLayout);
         show(interteristalPosID, type);
-        return frameLayout;
+
+        return relativeContainer;
     }
 
-
-    public void show(String id, int type) {
+    private void show(String id, int type) {
         if (type == 1) {
             load(id, AdSize.InterstitialOther);
         } else if (type == 2) {
@@ -125,9 +133,10 @@ public class BaiduAdMobInterstitialAdFragment extends DialogFragment {
         } else if (type == 3) {
             load(id, AdSize.InterstitialForVideoPausePlay);
         }
+
     }
 
-    public void load(String id, AdSize adSize) {
+    private void load(String id, AdSize adSize) {
         String adPlaceId = id; // 重要：请填上您的广告位ID
         interAd = new InterstitialAd(mContext, adSize, adPlaceId);
         interAd.setListener(new InterstitialAdListener() {
@@ -154,13 +163,7 @@ public class BaiduAdMobInterstitialAdFragment extends DialogFragment {
             @Override
             public void onAdReady() {
                 Log.i("ZanTingYe_AD", "onAdReady");
-                if (interAd.isAdReady()) {
-                    interAd.showAdInParentForVideoApp((Activity) mContext, relativeLayout);
-                } else {
-                    reLayoutParams.width = adWidth;
-                    reLayoutParams.height = adHeight;
-                    interAd.loadAdForVideoApp(adWidth, adHeight);
-                }
+                interAd.showAdInParentForVideoApp((Activity) mContext, relativeLayout);
                 sendUpdate("onSuccess", true);
             }
 
@@ -169,19 +172,24 @@ public class BaiduAdMobInterstitialAdFragment extends DialogFragment {
 
             }
         });
-        if (interAd.isAdReady()) {
-            interAd.showAdInParentForVideoApp((Activity) mContext, relativeLayout);
-        } else {
-            reLayoutParams.width = adWidth;
-            reLayoutParams.height = adHeight;
-            interAd.loadAdForVideoApp(adWidth, adHeight);
+
+        reLayoutParams.width = adWidth;
+        reLayoutParams.height = adHeight;
+        interAd.loadAdForVideoApp(adWidth, adHeight);
+    }
+
+    public void finish() {
+        if (interAd != null) {
+            interAd.destroy();
+            sendUpdate("onClose", false);
+            dismissAllowingStateLoss();
         }
     }
 
-    public CallbackContext scallbackContext;
+    public CallbackContext callbackContext;
 
     public void setCallbackContext(CallbackContext callbackContext) {
-        this.scallbackContext = callbackContext;
+        this.callbackContext = callbackContext;
     }
 
     public void sendUpdate(String content, boolean keepCallback) {
@@ -200,7 +208,7 @@ public class BaiduAdMobInterstitialAdFragment extends DialogFragment {
     private void sendUpdate(JSONObject obj, boolean keepCallback, PluginResult.Status status) {
         PluginResult result = new PluginResult(status, obj);
         result.setKeepCallback(keepCallback);
-        scallbackContext.sendPluginResult(result);
+        callbackContext.sendPluginResult(result);
     }
 
 }
