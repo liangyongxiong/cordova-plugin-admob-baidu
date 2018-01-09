@@ -9,9 +9,6 @@
     <keywords>cordova,plugin,admob,baidu,mssp,ads</keywords>
     <license>MIT</license>
 
-    <repo>https://github.com/liangyongxiong/cordova-plugin-admob-baidu.git</repo>
-    <issue>https://github.com/liangyongxiong/cordova-plugin-admob-baidu/issues</issue>
-
     <js-module name="baiduadmob" src="www/baiduadmob.js">
          <clobbers target="cordova.BaiduAdMob" />
     </js-module>
