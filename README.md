@@ -1,6 +1,6 @@
 # Baidu Admob for MSSP / Cordova Plugin
 
-[![release](https://img.shields.io/badge/release-1.0.7-blue.svg)](https://github.com/liangyongxiong/cordova-plugin-admob-baidu/releases)
+[![release](https://img.shields.io/badge/release-1.0.8-blue.svg)](https://github.com/liangyongxiong/cordova-plugin-admob-baidu/releases)
 [![platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20Android-lightgrey.svg)](https://github.com/liangyongxiong/cordova-plugin-admob-baidu)
 [![qq](https://img.shields.io/badge/qq-331338391-blue.svg)](http://wpa.qq.com/msgrd?v=3&uin=331338391&menu=yes)
 
