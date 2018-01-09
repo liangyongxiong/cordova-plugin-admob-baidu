@@ -5,9 +5,9 @@
 
     <name>Baidu MSSP</name>
     <author>Michael LYX</author>
-    <description>Cordova Baidu MSSP Ads Plugin</description>
+    <description>Cordova Plugin for Baidu MSSP Ads</description>
     <keywords>cordova,baidu,mssp,ads</keywords>
-    <license>Apache 2.0</license>
+    <license>MIT</license>
     <repo>https://github.com/liangyongxiong/cordova-plugin-admob-baidu.git</repo>
     <issue>https://github.com/liangyongxiong/cordova-plugin-admob-baidu/issues</issue>
 

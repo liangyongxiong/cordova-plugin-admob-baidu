@@ -1,13 +1,13 @@
 {
   "name": "cordova-plugin-admob-baidu",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": {
     "name": "Michael LYX"
   },
-  "license": "Apache-2.0",
+  "license": "MIT",
   "cordova": {
     "id": "cordova-plugin-admob-baidu",
     "platforms": [
@@ -15,7 +15,7 @@
       "ios"
     ]
   },
-  "description": "Cordova Baidu MSSP Ads Plugin",
+  "description": "Cordova Plugin for Baidu MSSP Ads",
   "keywords": [
     "cordova",
     "plugin",
