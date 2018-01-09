@@ -52,23 +52,27 @@
 {
     return appkey;//appkey
 }
-- (void)willDisplayAd:(BaiduMobAdView *)adview{
+- (void)willDisplayAd:(BaiduMobAdView *)adview
+{
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"type":@"onSuccess"}];
     [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.bannerCommand.callbackId];
 }
-- (void)failedDisplayAd:(BaiduMobFailReason)reason{
+- (void)failedDisplayAd:(BaiduMobFailReason)reason
+{
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"type":@"onError"}];
     [pluginResult setKeepCallback:[NSNumber numberWithBool:NO]];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.bannerCommand.callbackId];
 }
-- (void)didAdClicked{
+- (void)didAdClicked
+{
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"type":@"onClick"}];
     [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.bannerCommand.callbackId];
 }
 //点击关闭的时候移除广告
-- (void)didAdClose{
+- (void)didAdClose
+{
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"type":@"onClose"}];
     [pluginResult setKeepCallback:[NSNumber numberWithBool:NO]];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.bannerCommand.callbackId];
@@ -109,7 +113,8 @@
         }
     }
 }
-- (void)hideInterstitialAd:(CDVInvokedUrlCommand*)command{
+- (void)hideInterstitialAd:(CDVInvokedUrlCommand*)command
+{
     [interstitialAdCustomAdView removeFromSuperview];
     interstitialAdView.delegate = nil;
     interstitialAdView = nil;
@@ -118,13 +123,14 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.interstitialCommand.callbackId];
 }
 - (void)setUpInterstitialAdView{
-    CGFloat viewWidth = ScreenWidth*0.75;
-    CGFloat viewHeight = ScreenHeight*0.75;
+    CGFloat viewWidth = ScreenWidth*0.8;
+    CGFloat viewHeight = ScreenHeight*0.8;
     [interstitialAdView loadUsingSize:CGRectMake((ScreenWidth-viewWidth)*0.5, (ScreenHeight-viewHeight)*0.5, viewWidth, viewHeight)];
 }
 #pragma mark BaiduMobAdInterstitialDelegate
 //广告预加载成功
-- (void)interstitialSuccessToLoadAd:(BaiduMobAdInterstitial *)interstitial{
+- (void)interstitialSuccessToLoadAd:(BaiduMobAdInterstitial *)interstitial
+{
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"type":@"onSuccess"}];
     [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.interstitialCommand.callbackId];
@@ -133,8 +139,8 @@
         if ([@"1" isEqualToString:interstitialAdType]) {
             [interstitialAdView presentFromRootViewController:[[UIApplication sharedApplication] keyWindow].rootViewController];
         } else {
-            CGFloat viewWidth = ScreenWidth*0.75;
-            CGFloat viewHeight = ScreenHeight*0.75;
+            CGFloat viewWidth = ScreenWidth*0.8;
+            CGFloat viewHeight = ScreenHeight*0.8;
             UIView *customAdView = [[UIView alloc]initWithFrame:CGRectMake((ScreenWidth-viewWidth)*0.5, (ScreenHeight-viewHeight)*0.5, viewWidth, viewHeight)] ;
             customAdView.backgroundColor = [UIColor clearColor];
             [[[UIApplication sharedApplication] keyWindow] addSubview:customAdView];
@@ -143,17 +149,20 @@
         }
     }
 }
-- (void)interstitialFailToLoadAd:(BaiduMobAdInterstitial *)interstitial{
+- (void)interstitialFailToLoadAd:(BaiduMobAdInterstitial *)interstitial
+{
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"type":@"onError"}];
     [pluginResult setKeepCallback:[NSNumber numberWithBool:NO]];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.interstitialCommand.callbackId];
 }
-- (void)interstitialDidAdClicked:(BaiduMobAdInterstitial *)interstitial{
+- (void)interstitialDidAdClicked:(BaiduMobAdInterstitial *)interstitial
+{
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"type":@"onClick"}];
     [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.interstitialCommand.callbackId];
 }
-- (void)interstitialDidDismissScreen:(BaiduMobAdInterstitial *)interstitial{
+- (void)interstitialDidDismissScreen:(BaiduMobAdInterstitial *)interstitial
+{
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"type":@"onClose"}];
     [pluginResult setKeepCallback:[NSNumber numberWithBool:NO]];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.interstitialCommand.callbackId];
@@ -195,13 +204,14 @@
         skipBtn.titleLabel.font = [UIFont systemFontOfSize:14];
         [skipBtn addTarget:self action:@selector(removeSplash) forControlEvents:UIControlEventTouchUpInside];
         skipTime = 5;
-        [skipBtn setTitle:[NSString stringWithFormat:@"跳过 %@",@(skipTime)] forState:UIControlStateNormal];
+       // [skipBtn setTitle:[NSString stringWithFormat:@"跳过 %@",@(skipTime)] forState:UIControlStateNormal];
+        [skipBtn setTitle:[NSString stringWithFormat:@"跳过"] forState:UIControlStateNormal];
         [splashCustomView addSubview:skipBtn];
 
         skipView.hidden = YES;
         skipBtn.hidden = YES;
 
-        skipTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(onTimer) userInfo:nil repeats:YES];
+        //skipTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(onTimer) userInfo:nil repeats:YES];
 
         UIImage *img = [self createImgWithPath:[[dic objectForKey:@"bottom"] objectForKey:@"image"]];
         UIImageView *logo = [[UIImageView alloc] initWithImage:img];
@@ -213,7 +223,8 @@
         [splash loadAndDisplayUsingContainerView:baiduSplashContainer];
     }
 }
-- (void)onTimer {
+- (void)onTimer
+{
     if (skipTime == 0) {
         [skipTimer invalidate];
         skipTimer = nil;
@@ -223,7 +234,8 @@
 }
 
 #pragma mark  BaiduMobAdSplashDelegate
-- (void)splashSuccessPresentScreen:(BaiduMobAdSplash *)splash{
+- (void)splashSuccessPresentScreen:(BaiduMobAdSplash *)splash
+{
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"type":@"onSuccess"}];
     [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.splashCommand.callbackId];
@@ -231,26 +243,30 @@
     skipView.hidden = NO;
     skipBtn.hidden = NO;
 }
-- (void)splashlFailPresentScreen:(BaiduMobAdSplash *)splash withError:(BaiduMobFailReason) reason{
+- (void)splashlFailPresentScreen:(BaiduMobAdSplash *)splash withError:(BaiduMobFailReason) reason
+{
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"type":@"onError"}];
     [pluginResult setKeepCallback:[NSNumber numberWithBool:NO]];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.splashCommand.callbackId];
 
      [self removeSplash];
 }
-- (void)splashDidClicked:(BaiduMobAdSplash *)splash{
+- (void)splashDidClicked:(BaiduMobAdSplash *)splash
+{
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"type":@"onClick"}];
     [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.splashCommand.callbackId];
 }
-- (void)splashDidDismissScreen:(BaiduMobAdSplash *)splash{
+- (void)splashDidDismissScreen:(BaiduMobAdSplash *)splash
+{
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"type":@"onClose"}];
     [pluginResult setKeepCallback:[NSNumber numberWithBool:NO]];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.splashCommand.callbackId];
 
     [self removeSplash];
 }
-- (void)removeSplash {
+- (void)removeSplash
+{
     [skipTimer invalidate];
     skipTimer = nil;
     if (splash) {
@@ -261,7 +277,8 @@
 }
 
 #pragma mark - json解析
-- (NSDictionary *)returnDicWithJsonStr:(CDVInvokedUrlCommand*)command{
+- (NSDictionary *)returnDicWithJsonStr:(CDVInvokedUrlCommand*)command
+{
     NSArray* options = command.arguments;
     NSString *jsonStr = [options firstObject];
     if (jsonStr.length>0) {

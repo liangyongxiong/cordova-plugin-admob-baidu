@@ -3,24 +3,24 @@
 
 ## SDK
 
-#### Android 通用版
++ [Android 通用版](https://baidu-ssp.gz.bcebos.com/mssp/sdk/BaiduMobAds_MSSP_bd_SDK_android_v5.6.zip)
 
-https://baidu-ssp.gz.bcebos.com/mssp/sdk/BaiduMobAds_MSSP_bd_SDK_android_v5.6.zip
-
-#### iOS 通用版
-
-https://baidu-ssp.gz.bcebos.com/mssp/sdk/BaiduMobAds_MSSP_bd_SDK_iOS_v4.5.zip
++ [iOS 通用版](https://baidu-ssp.gz.bcebos.com/mssp/sdk/BaiduMobAds_MSSP_bd_SDK_iOS_v4.5.zip)
 
 ## NPM
 https://www.npmjs.com/package/cordova-plugin-admob-baidu
 
 ## Installation
 
-    cordova plugin add cordova-plugin-admob-baidu
+```sh
+$ cordova plugin add cordova-plugin-admob-baidu
+```
 
-或
+或者
 
-    cordova plugin add https://github.com/liangyongxiong/cordova-plugin-admob-baidu.git
+```sh
+$ cordova plugin add https://github.com/liangyongxiong/cordova-plugin-admob-baidu.git
+```
 
 ## Usage
 
@@ -32,64 +32,70 @@ https://www.npmjs.com/package/cordova-plugin-admob-baidu
 
 `align` : 显示位置（top-顶部，bottom-底部）
 
-    var banner = cordova.BaiduAdMob.BannerAd.show({
-        app: YOUR_APP_ID,
-        position: YOUR_POSITION_ID,
-        align: 'bottom',
-    }).addEventListener('onSuccess',function(event) {
-        console.log('Baidu AdMob banner onSuccess');
-        setTimeout(function() {
-            banner.hide();
-        }, 3000);
-    }).addEventListener('onError',function(event) {
-        console.log('Baidu AdMob banner onError');
-    }).addEventListener('onClose',function(event) {
-        console.log('Baidu AdMob banner onClose');
-    }).addEventListener('onClick',function(event) {
-        console.log('Baidu AdMob banner onClick');
-    });
+```javascript
+var banner = cordova.BaiduAdMob.BannerAd.show({
+    app: YOUR_APP_ID,
+    position: YOUR_POSITION_ID,
+    align: 'bottom',
+}).addEventListener('onSuccess', function(event) {
+    console.log('Baidu AdMob banner onSuccess');
+    setTimeout(function() {
+        banner.hide();
+    }, 3000);
+}).addEventListener('onError', function(event) {
+    console.log('Baidu AdMob banner onError');
+}).addEventListener('onClose', function(event) {
+    console.log('Baidu AdMob banner onClose');
+}).addEventListener('onClick', function(event) {
+    console.log('Baidu AdMob banner onClick');
+});
+```
 
 #### 插屏广告（Interstitial）
 
 `type` : 插屏类型（1-其它，2-视频播放前倒计时，3-视频播放中暂停）
 
-    var interstitial = cordova.BaiduAdMob.InterstitialAd.show({
-        app: YOUR_APP_ID,
-        position: YOUR_POSITION_ID,
-        type: 3,
-    }).addEventListener('onSuccess',function(event) {
-        console.log('Baidu AdMob interstitial onSuccess');
-        setTimeout(function() {
-            interstitial.hide();
-        }, 5000);
-    }).addEventListener('onError',function(event) {
-        console.log('Baidu AdMob interstitial onError');
-    }).addEventListener('onClose',function(event) {
-        console.log('Baidu AdMob interstitial onClose');
-    }).addEventListener('onClick',function(event) {
-        console.log('Baidu AdMob interstitial onClick');
-    });
+```javascript
+var interstitial = cordova.BaiduAdMob.InterstitialAd.show({
+    app: YOUR_APP_ID,
+    position: YOUR_POSITION_ID,
+    type: 3,
+}).addEventListener('onSuccess', function(event) {
+    console.log('Baidu AdMob interstitial onSuccess');
+    setTimeout(function() {
+        interstitial.hide();
+    }, 5000);
+}).addEventListener('onError', function(event) {
+    console.log('Baidu AdMob interstitial onError');
+}).addEventListener('onClose', function(event) {
+    console.log('Baidu AdMob interstitial onClose');
+}).addEventListener('onClick', function(event) {
+    console.log('Baidu AdMob interstitial onClick');
+});
+```
 
 #### 开屏广告（Splash）
 
 `bottom` : 底部填充区域，包括图片路径和填充区域高度（单位：dp）
 
-    var splash = cordova.BaiduAdMob.SplashAd.show({
-        app: YOUR_APP_ID,
-        position: YOUR_POSITION_ID,
-        bottom: {
-            image: 'images/bottom.jpg',
-            height: 120,
-        },
-    }).addEventListener('onSuccess',function(event) {
-        console.log('Baidu AdMob splash onSuccess');
-    }).addEventListener('onError',function(event) {
-        console.log('Baidu AdMob splash onError');
-    }).addEventListener('onClose',function(event) {
-        console.log('Baidu AdMob splash onClose');
-    }).addEventListener('onClick',function(event) {
-        console.log('Baidu AdMob splash onClick');
-    });
+```javascript
+var splash = cordova.BaiduAdMob.SplashAd.show({
+    app: YOUR_APP_ID,
+    position: YOUR_POSITION_ID,
+    bottom: {
+        image: 'images/bottom.jpg',
+        height: 120,
+    },
+}).addEventListener('onSuccess', function(event) {
+    console.log('Baidu AdMob splash onSuccess');
+}).addEventListener('onError', function(event) {
+    console.log('Baidu AdMob splash onError');
+}).addEventListener('onClose', function(event) {
+    console.log('Baidu AdMob splash onClose');
+}).addEventListener('onClick', function(event) {
+    console.log('Baidu AdMob splash onClick');
+});
+```
 
 ## Credits
 Empty
