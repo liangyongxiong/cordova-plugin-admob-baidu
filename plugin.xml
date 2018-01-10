@@ -1,13 +1,16 @@
 <?xml version='1.0' encoding='utf-8'?>
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android"
-    id="cordova-plugin-admob-baidu" version="1.0.8">
+    id="cordova-plugin-admob-baidu" version="1.0.11">
 
     <name>Baidu AdMob</name>
     <description>Cordova Plugin for Baidu MSSP Ads</description>
     <author>Michael LYX</author>
     <keywords>cordova,plugin,admob,baidu,mssp,ads</keywords>
     <license>MIT</license>
+
+    <repo>https://github.com/liangyongxiong/cordova-plugin-admob-baidu.git</repo>
+    <issue>https://github.com/liangyongxiong/cordova-plugin-admob-baidu/issues</issue>
 
     <js-module name="baiduadmob" src="www/baiduadmob.js">
          <clobbers target="cordova.BaiduAdMob" />
