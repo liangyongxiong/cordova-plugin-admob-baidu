@@ -104,6 +104,22 @@ var splash = cordova.BaiduAdMob.SplashAd.show({
 });
 ```
 
+#### Feeds联盟（Feeds）
+
+```javascript
+cordova.BaiduAdMob.FeedsAd.url({
+    app: YOUR_APP_ID,
+    channel: YOUR_CHANNEL_ID
+}).addEventListener('onSuccess', function(event) {
+    console.log('Baidu AdMob feeds onSuccess');
+
+    // Feeds联盟接入URL
+    alert(event.url);
+}).addEventListener('onError', function(event) {
+    console.log('Baidu AdMob feeds onError');
+});
+```
+
 ## FAQ
 Empty
 

@@ -24,6 +24,7 @@
 - (void)showInterstitialAd:(CDVInvokedUrlCommand*)command;
 - (void)hideInterstitialAd:(CDVInvokedUrlCommand*)command;
 - (void)showSplashAd:(CDVInvokedUrlCommand*)command;
+- (void)getCpuInfoUrl:(CDVInvokedUrlCommand*)command;
 @end
 
 

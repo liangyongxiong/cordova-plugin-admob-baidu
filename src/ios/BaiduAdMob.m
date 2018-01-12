@@ -3,6 +3,7 @@
 //
 
 #import "BaiduAdMob.h"
+#import "BaiduMobAdSDK/BaiduMobCpuInfoManager.h"
 
 
 #define ScreenWidth [UIScreen mainScreen].bounds.size.width
@@ -273,6 +274,20 @@
         [splashCustomView removeFromSuperview];
         splash.delegate = nil;
         splash = nil;
+    }
+}
+
+- (void)getCpuInfoUrl:(CDVInvokedUrlCommand*)command
+{
+    NSDictionary *dic = [self returnDicWithJsonStr:command];
+    if (dic) {
+        NSString *app = [dic objectForKey:@"app"];
+        NSString *channel = [dic objectForKey:@"channel"];
+        NSString *urlStr = [[BaiduMobCpuInfoManager shared] getCpuInfoUrlWithChannelId:channel appId:app];
+
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"type":@"onSuccess",@"url":urlStr}];
+        [pluginResult setKeepCallback:[NSNumber numberWithBool:NO]];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }
 }
 

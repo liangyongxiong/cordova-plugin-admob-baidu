@@ -7,12 +7,13 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.baidu.mobads.InterstitialAd;
 import com.baidu.mobads.BaiduManager;
+import com.baidu.mobads.CpuInfoManager;
 import com.baidu.mobads.production.BaiduXAdSDKContext;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -143,7 +144,27 @@ public class BaiduAdMob extends CordovaPlugin {
                     ft.commitAllowingStateLoss();
                 }
             });
+        } else if (action.equals("getCpuInfoUrl")) {
+            String content = args.getString(0);
+            JSONObject object = new JSONObject(content);
+            final String app = object.getString("app");
+            final String channel = object.getString("channel");
+            CpuInfoManager.getCpuInfoUrl(activity, app, Integer.parseInt(channel), new CpuInfoManager.UrlListener() {
+                @Override
+                public void onUrl(String url) {
+                    JSONObject obj = null;
+                    try {
+                        obj = new JSONObject();
+                        obj.put("type", "onSuccess");
+                        obj.put("url", url);
+                    } catch (Exception e) {
+                    }
 
+                    PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
+                    result.setKeepCallback(false);
+                    callbackContext.sendPluginResult(result);
+                }
+            });
         } else {
             return false;
         }

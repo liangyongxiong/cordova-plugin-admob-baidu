@@ -63,9 +63,22 @@ SplashAd.show = function(options) {
     return ad;
 };
 
+var FeedsAd = function() { BaseAd.call(this); };
+FeedsAd.prototype = new BaseAd();
+
+FeedsAd.url = function(options) {
+    var ad = new SplashAd();
+    var cb = function(eventname) {
+       ad._eventHandler(eventname);
+    };
+    exec(cb, cb, 'BaiduAdMob', 'getCpuInfoUrl', [JSON.stringify(options)]);
+    return ad;
+};
+
 module.exports = {
     BannerAd: BannerAd,
     InterstitialAd: InterstitialAd,
     SplashAd: SplashAd,
+    FeedsAd: FeedsAd,
 };
 
