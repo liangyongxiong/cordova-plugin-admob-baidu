@@ -23,19 +23,17 @@ public class BaiduAdMob extends CordovaPlugin {
     private static final int BOTTOM_VIEW_ID = 0x1;
     private RelativeLayout bottomView, contentView;
     private BaiduAdMobBannerFragment bannerFragment;
-    private BaiduAdMobInterstitialAdFragment interstitialAdFragment;
+    private BaiduAdMobInterstitialFragment interstitialFragment;
 
     @Override
     protected void pluginInitialize() {
         Activity activity = this.cordova.getActivity();
-        Log.i("", "pluginInitialize");
         // 百度广告展现前先调用sdk初始化方法，可以有效缩短广告第一次展现所需时间
         BaiduManager.init(activity);
     }
 
     @Override
     public void onDestroy() {
-        Log.i("", "onDestroy");
         // 通过BaiduXAdSDKContext.exit()来告知AdSDK，以便AdSDK能够释放资源.
         BaiduXAdSDKContext.exit();
     }
@@ -110,9 +108,9 @@ public class BaiduAdMob extends CordovaPlugin {
                 public void run() {
                     FragmentManager fm = activity.getFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
-                    interstitialAdFragment = BaiduAdMobInterstitialAdFragment.newInstance(app, position, type);
-                    interstitialAdFragment.setCallbackContext(callbackContext);
-                    ft.add(interstitialAdFragment, BaiduAdMobInterstitialAdFragment.class.getSimpleName());
+                    interstitialFragment = BaiduAdMobInterstitialFragment.newInstance(app, position, type);
+                    interstitialFragment.setCallbackContext(callbackContext);
+                    ft.add(interstitialFragment, BaiduAdMobInterstitialFragment.class.getSimpleName());
                     ft.commitAllowingStateLoss();
                 }
             });
@@ -120,8 +118,8 @@ public class BaiduAdMob extends CordovaPlugin {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (interstitialAdFragment != null) {
-                        interstitialAdFragment.finish();
+                    if (interstitialFragment != null) {
+                        interstitialFragment.dismissAllowingStateLoss();
                     }
                 }
             });
@@ -138,9 +136,9 @@ public class BaiduAdMob extends CordovaPlugin {
                 public void run() {
                     FragmentManager fm = activity.getFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
-                    BaiduAdMobSplashAdFragment fragment = BaiduAdMobSplashAdFragment.newInstance(app, position, image, height);
+                    BaiduAdMobSplashFragment fragment = BaiduAdMobSplashFragment.newInstance(app, position, image, height);
                     fragment.setCallbackContext(callbackContext);
-                    ft.add(fragment, BaiduAdMobSplashAdFragment.class.getSimpleName());
+                    ft.add(fragment, BaiduAdMobSplashFragment.class.getSimpleName());
                     ft.commitAllowingStateLoss();
                 }
             });

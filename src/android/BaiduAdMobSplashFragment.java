@@ -41,7 +41,7 @@ import java.io.InputStream;
  * Created by shion on 2017/12/15.
  */
 
-public class BaiduAdMobSplashAdFragment extends DialogFragment {
+public class BaiduAdMobSplashFragment extends DialogFragment {
     public static final String APPID = "APPID";//应用id
     public static final String SplashPosID = "SplashPosID";
     public static final String IMAGE = "image";
@@ -60,33 +60,52 @@ public class BaiduAdMobSplashAdFragment extends DialogFragment {
     private SplashAdListener listener = new SplashAdListener() {
         @Override
         public void onAdDismissed() {
-            Log.i("RSplashActivity", "onAdDismissed");
-            sendUpdate("onClose", false);
+            try {
+                JSONObject obj = new JSONObject();
+                obj.put("type", "onClose");
+                sendUpdate(obj, false);
+            } catch (Exception e) {
+            }
+
             jumpWhenCanClick(); // 跳转至您的应用主界面
         }
 
         @Override
-        public void onAdFailed(String arg0) {
-            Log.i("RSplashActivity", "onAdFailed");
-            sendUpdate("onError", false);
+        public void onAdFailed(String reason) {
+            try {
+                JSONObject obj = new JSONObject();
+                obj.put("type", "onError");
+                obj.put("msg", reason);
+                sendUpdate(obj, false);
+            } catch (Exception e) {
+            }
+
             jump();
         }
 
         @Override
         public void onAdPresent() {
-            Log.i("RSplashActivity", "onAdPresent");
-            sendUpdate("onSuccess", true);
+            try {
+                JSONObject obj = new JSONObject();
+                obj.put("type", "onSuccess");
+                sendUpdate(obj, true);
+            } catch (Exception e) {
+            }
         }
 
         @Override
         public void onAdClick() {
-            Log.i("RSplashActivity", "onAdClick");
-            sendUpdate("onClick", true);
+            try {
+                JSONObject obj = new JSONObject();
+                obj.put("type", "onClick");
+                sendUpdate(obj, true);
+            } catch (Exception e) {
+            }
         }
     };
 
-    public static BaiduAdMobSplashAdFragment newInstance(String appid, String bannerPosID, String image, int height) {
-        BaiduAdMobSplashAdFragment fragment = new BaiduAdMobSplashAdFragment();
+    public static BaiduAdMobSplashFragment newInstance(String appid, String bannerPosID, String image, int height) {
+        BaiduAdMobSplashFragment fragment = new BaiduAdMobSplashFragment();
         Bundle bundle = new Bundle();
         bundle.putString(APPID, appid);
         bundle.putString(SplashPosID, bannerPosID);
@@ -138,7 +157,7 @@ public class BaiduAdMobSplashAdFragment extends DialogFragment {
         RelativeLayout relativeLayout = new RelativeLayout(mContext);
         relativeLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        //1.背景图片
+        // 背景图片
         bgImageView = new ImageView(mContext);
         bgImageView.setAdjustViewBounds(true);
         bgImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -146,7 +165,7 @@ public class BaiduAdMobSplashAdFragment extends DialogFragment {
         bgImageView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         relativeLayout.addView(bgImageView);
 
-        //2.广告容器+底部的Logo
+        // 广告容器+底部填充图
         LinearLayout linearLayout = new LinearLayout(mContext);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         linearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -163,37 +182,8 @@ public class BaiduAdMobSplashAdFragment extends DialogFragment {
         bottomImageView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(mContext, height)));
         linearLayout.addView(bottomImageView);
 
-        //第三部分 计时器
-        skipView = new TextView(mContext);
-        RelativeLayout.LayoutParams skipLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        skipLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        skipLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        skipLayoutParams.topMargin = dp2px(mContext, 16);
-        skipLayoutParams.rightMargin = dp2px(mContext, 16);
-        skipView.setLayoutParams(skipLayoutParams);
-        skipView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-        skipView.setTextColor(Color.WHITE);
-        skipView.setGravity(Gravity.CENTER);
-        GradientDrawable drawable = new GradientDrawable();
-        drawable.setColor(Color.parseColor("#80000000"));
-        drawable.setCornerRadius(dp2px(mContext, 45));
-        drawable.setStroke(dp2px(mContext, 1), Color.WHITE);
-        skipView.setBackground(drawable);
-        skipView.setPadding(dp2px(mContext, 9), dp2px(mContext, 5), dp2px(mContext, 9), dp2px(mContext, 5));
-        skipView.setVisibility(View.VISIBLE);
-        relativeLayout.addView(skipView);
-        skipView.setText("跳过");
-        skipView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                splashAd.destroy();
-                sendUpdate("onClose", false);
-                dismissAllowingStateLoss();
-            }
-        });
-        String adPlaceId = splashPosID; // 重要：请填上您的广告位ID，代码位错误会导致无法请求到广告
         // 如果开屏需要支持vr,needRequestVRAd(true)
-        splashAd = new SplashAd(mContext, container, listener, adPlaceId, true);
+        splashAd = new SplashAd(mContext, container, listener, splashPosID, true);
         return relativeLayout;
     }
 
@@ -261,15 +251,6 @@ public class BaiduAdMobSplashAdFragment extends DialogFragment {
 
     public void setCallbackContext(CallbackContext callbackContext) {
         this.callbackContext = callbackContext;
-    }
-
-    public void sendUpdate(String content, boolean keepCallback) {
-        try {
-            JSONObject obj = new JSONObject();
-            obj.put("type", content);
-            sendUpdate(obj, keepCallback);
-        } catch (Exception e) {
-        }
     }
 
     private void sendUpdate(JSONObject obj, boolean keepCallback) {

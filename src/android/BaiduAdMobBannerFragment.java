@@ -82,7 +82,13 @@ public class BaiduAdMobBannerFragment extends DialogFragment {
 
     @Override
     public void onDestroyView() {
-        sendUpdate("onClose", false);
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("type", "onClose");
+            sendUpdate(obj, false);
+        } catch (Exception e) {
+        }
+
         doCloseBanner();
         super.onDestroyView();
     }
@@ -94,37 +100,58 @@ public class BaiduAdMobBannerFragment extends DialogFragment {
         // 创建广告View
         String adPlaceId = bannerPosId; //  重要：请填上您的广告位ID，代码位错误会导致无法请求到广告
         adView = new AdView(mContext, adPlaceId);
+
         // 设置监听器
         adView.setListener(new AdViewListener() {
+            @Override
             public void onAdSwitch() {
-                Log.w("", "onAdSwitch");
-            }
-
-            public void onAdShow(JSONObject info) {
-                // 广告已经渲染出来
-                Log.w("", "onAdShow " + info.toString());
-            }
-
-            public void onAdReady(AdView adView) {
-                // 资源已经缓存完毕，还没有渲染出来
-                Log.w("", "onAdReady " + adView);
-                sendUpdate("onSuccess", true);
-            }
-
-            public void onAdFailed(String reason) {
-                Log.w("", "onAdFailed " + reason);
-                sendUpdate("onError", false);
-            }
-
-            public void onAdClick(JSONObject info) {
-                Log.w("", "onAdClick " + info.toString());
-                sendUpdate("onClick", true);
             }
 
             @Override
-            public void onAdClose(JSONObject arg0) {
-                Log.w("", "onAdClose");
-                sendUpdate("onClose", false);
+            public void onAdShow(JSONObject info) {
+                // 广告已经渲染出来
+            }
+
+            @Override
+            public void onAdReady(AdView adView) {
+                // 资源已经缓存完毕，还没有渲染出来
+                try {
+                    JSONObject obj = new JSONObject();
+                    obj.put("type", "onSuccess");
+                    sendUpdate(obj, true);
+                } catch (Exception e) {
+                }
+            }
+
+            @Override
+            public void onAdFailed(String reason) {
+                try {
+                    JSONObject obj = new JSONObject();
+                    obj.put("type", "onError");
+                    obj.put("msg", reason);
+                    sendUpdate(obj, false);
+                } catch (Exception e) {
+                }
+            }
+
+            @Override
+            public void onAdClick(JSONObject info) {
+                try {
+                    JSONObject obj = new JSONObject();
+                    obj.put("type", "onClick");
+                    sendUpdate(obj, true);
+                } catch (Exception e) {
+                }
+            }
+
+            @Override
+            public void onAdClose(JSONObject info) {
+                try {
+                    JSONObject obj = new JSONObject();
+                    obj.put("type", "onClose");
+                    sendUpdate(obj, false);
+                } catch (Exception e) {
+                }
             }
         });
 
@@ -136,9 +163,9 @@ public class BaiduAdMobBannerFragment extends DialogFragment {
         int height = width * 3 / 20;
 
         // 将adView添加到父控件中(注：该父控件不一定为您的根控件，只要该控件能通过addView能添加广告视图即可)
-        RelativeLayout.LayoutParams rllp = new RelativeLayout.LayoutParams(width, height);
-        rllp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        yourOriginnalLayout.addView(adView, rllp);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        yourOriginnalLayout.addView(adView, params);
         return yourOriginnalLayout;
     }
 
@@ -152,15 +179,6 @@ public class BaiduAdMobBannerFragment extends DialogFragment {
 
     public void setCallbackContext(CallbackContext callbackContext) {
         this.callbackContext = callbackContext;
-    }
-
-    public void sendUpdate(String content, boolean keepCallback) {
-        try {
-            JSONObject obj = new JSONObject();
-            obj.put("type", content);
-            sendUpdate(obj, keepCallback);
-        } catch (Exception e) {
-        }
     }
 
     private void sendUpdate(JSONObject obj, boolean keepCallback) {

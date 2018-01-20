@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android"
-    id="cordova-plugin-admob-baidu" version="1.0.12">
+    id="cordova-plugin-admob-baidu" version="1.0.13">
 
     <name>Baidu AdMob</name>
     <description>Cordova Plugin for Baidu MSSP Ads</description>
@@ -54,8 +54,8 @@
 
         <source-file src="src/android/BaiduAdMob.java" target-dir="src/cn/liangyongxiong/cordova/plugin/admob/baidu" />
         <source-file src="src/android/BaiduAdMobBannerFragment.java" target-dir="src/cn/liangyongxiong/cordova/plugin/admob/baidu" />
-        <source-file src="src/android/BaiduAdMobInterstitialAdFragment.java" target-dir="src/cn/liangyongxiong/cordova/plugin/admob/baidu" />
-        <source-file src="src/android/BaiduAdMobSplashAdFragment.java" target-dir="src/cn/liangyongxiong/cordova/plugin/admob/baidu" />
+        <source-file src="src/android/BaiduAdMobInterstitialFragment.java" target-dir="src/cn/liangyongxiong/cordova/plugin/admob/baidu" />
+        <source-file src="src/android/BaiduAdMobSplashFragment.java" target-dir="src/cn/liangyongxiong/cordova/plugin/admob/baidu" />
     </platform>
 
     <!-- ios -->

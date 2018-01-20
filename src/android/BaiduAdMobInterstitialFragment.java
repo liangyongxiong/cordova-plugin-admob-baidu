@@ -33,7 +33,7 @@ import org.json.JSONObject;
  * Created by shion on 2017/12/15.
  */
 
-public class BaiduAdMobInterstitialAdFragment extends DialogFragment {
+public class BaiduAdMobInterstitialFragment extends DialogFragment {
     public static final String APPID = "APPID";//应用id
     public static final String InterteristalPosID = "InterteristalPosID";
     public static final String TYPE = "type";
@@ -46,8 +46,8 @@ public class BaiduAdMobInterstitialAdFragment extends DialogFragment {
     private RelativeLayout relativeLayout;
     private RelativeLayout.LayoutParams reLayoutParams;
 
-    public static BaiduAdMobInterstitialAdFragment newInstance(String appid, String bannerPosID, int popup) {
-        BaiduAdMobInterstitialAdFragment fragment = new BaiduAdMobInterstitialAdFragment();
+    public static BaiduAdMobInterstitialFragment newInstance(String appid, String bannerPosID, int popup) {
+        BaiduAdMobInterstitialFragment fragment = new BaiduAdMobInterstitialFragment();
         Bundle bundle = new Bundle();
         bundle.putString(APPID, appid);
         bundle.putString(InterteristalPosID, bannerPosID);
@@ -80,8 +80,8 @@ public class BaiduAdMobInterstitialAdFragment extends DialogFragment {
         if (window != null) {
             WindowManager.LayoutParams lp = window.getAttributes();
             lp.windowAnimations = android.R.style.Animation_Dialog;
-            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-            lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
             lp.gravity = Gravity.CENTER;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -94,7 +94,6 @@ public class BaiduAdMobInterstitialAdFragment extends DialogFragment {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
-                    finish();
                     return false;
                 }
                 return false;
@@ -103,7 +102,7 @@ public class BaiduAdMobInterstitialAdFragment extends DialogFragment {
 
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
-        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCanceledOnTouchOutside(true);
         return dialog;
     }
 
@@ -140,36 +139,53 @@ public class BaiduAdMobInterstitialAdFragment extends DialogFragment {
         String adPlaceId = id; // 重要：请填上您的广告位ID
         interAd = new InterstitialAd(mContext, adSize, adPlaceId);
         interAd.setListener(new InterstitialAdListener() {
-
             @Override
-            public void onAdClick(InterstitialAd arg0) {
-                Log.i("ZanTingYe_AD", "onAdClick");
-                sendUpdate("onClick", true);
+            public void onAdClick(InterstitialAd adView) {
+                try {
+                    JSONObject obj = new JSONObject();
+                    obj.put("type", "onClick");
+                    sendUpdate(obj, true);
+                } catch (Exception e) {
+                }
             }
 
             @Override
             public void onAdDismissed() {
-                Log.i("ZanTingYe_AD", "onAdDismissed");
-                sendUpdate("onClose", false);
+                try {
+                    JSONObject obj = new JSONObject();
+                    obj.put("type", "onClose");
+                    sendUpdate(obj, false);
+                } catch (Exception e) {
+                }
+
                 dismissAllowingStateLoss();
             }
 
             @Override
-            public void onAdFailed(String arg0) {
-                Log.i("ZanTingYe_AD", "onAdFailed");
-                sendUpdate("onError", false);
+            public void onAdFailed(String reason) {
+                try {
+                    JSONObject obj = new JSONObject();
+                    obj.put("type", "onError");
+                    obj.put("msg", reason);
+                    sendUpdate(obj, false);
+                } catch (Exception e) {
+                }
             }
 
             @Override
             public void onAdReady() {
-                Log.i("ZanTingYe_AD", "onAdReady");
+                try {
+                    JSONObject obj = new JSONObject();
+                    obj.put("type", "onSuccess");
+                    sendUpdate(obj, true);
+                } catch (Exception e) {
+                }
+
                 interAd.showAdInParentForVideoApp((Activity) mContext, relativeLayout);
-                sendUpdate("onSuccess", true);
             }
 
             @Override
             public void onAdPresent() {
-
             }
         });
 
@@ -178,27 +194,25 @@ public class BaiduAdMobInterstitialAdFragment extends DialogFragment {
         interAd.loadAdForVideoApp(adWidth, adHeight);
     }
 
-    public void finish() {
+    @Override
+    public void onDismiss(DialogInterface dialog) {
         if (interAd != null) {
             interAd.destroy();
-            sendUpdate("onClose", false);
-            dismissAllowingStateLoss();
+
+            try {
+                JSONObject obj = new JSONObject();
+                obj.put("type", "onClose");
+                sendUpdate(obj, false);
+            } catch (Exception e) {
+            }
         }
+        super.onDismiss(dialog);
     }
 
     public CallbackContext callbackContext;
 
     public void setCallbackContext(CallbackContext callbackContext) {
         this.callbackContext = callbackContext;
-    }
-
-    public void sendUpdate(String content, boolean keepCallback) {
-        try {
-            JSONObject obj = new JSONObject();
-            obj.put("type", content);
-            sendUpdate(obj, keepCallback);
-        } catch (Exception e) {
-        }
     }
 
     private void sendUpdate(JSONObject obj, boolean keepCallback) {
